@@ -30,8 +30,11 @@ def main():
     sp = spotipy.Spotify()
     #user = get_user_information(sp)
     #print(user)
-    track = "spotify:track:6ZtJwCyyH3HpRXpL1TI1Cp"
+    # testing with the different ways one could enter a spotify track.
+    track = "spotify:track:5PwCuqzezD4a7mfxMNwk86"
     print(sp.track(track))
+    track = sp.track("6ZtJwCyyH3HpRXpL1TI1Cp")
+    print(track)
 
 
 if __name__ == "__main__":

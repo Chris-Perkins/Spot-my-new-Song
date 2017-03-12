@@ -2,7 +2,6 @@
 
 import spotipy
 import tkinter
-from spotipy.oauth2 import SpotifyClientCredentials
 
 
 # get the username of a user by extraction from URls
@@ -29,7 +28,10 @@ def get_user_information(sp):
 
 def main():
     sp = spotipy.Spotify()
-    user = get_user_information(sp)
+    #user = get_user_information(sp)
+    #print(user)
+    track = "spotify:track:6ZtJwCyyH3HpRXpL1TI1Cp"
+    print(sp.track(track))
 
 
 if __name__ == "__main__":

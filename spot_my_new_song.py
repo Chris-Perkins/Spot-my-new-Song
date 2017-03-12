@@ -1,4 +1,5 @@
 # Slightly modified spotipy tutorial code. Just making sure this works. :)
+# pause on project until I'm able to get a callback URI
 
 import spotipy
 import tkinter
@@ -35,6 +36,9 @@ def main():
     print(sp.track(track))
     track = sp.track("6ZtJwCyyH3HpRXpL1TI1Cp")
     print(track)
+    l_tracks = list()
+    l_tracks.append("6ZtJwCyyH3HpRXpL1TI1Cp")
+    print(sp.recommendations(None, None, l_tracks, 2, None))
 
 
 if __name__ == "__main__":

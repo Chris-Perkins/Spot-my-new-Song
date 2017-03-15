@@ -33,26 +33,6 @@ def extract_username(URl):
         return URl
 
 
-# get the username information using i/o
-def get_username():
-    # get the user information
-    username = extract_username(input("Please enter your spotify URl\n"))
-    
-    # create an un-authenticated session to check if our username is valid
-    sp = spotipy.Spotify()
-    
-    # keep looping until a valid username is received.
-    while True:
-        try:
-            # if this is not a valid username, we raise the handled exception.
-            sp.user(username)
-            
-            # valid username, return it.
-            return username
-        except spotipy.SpotifyException:
-            username = extract_username(input("Invalid username, please enter again\n"))
-
-
 # get client credentials
 def get_spotify_session():
     # final variable detailing our scope/needed permissions
@@ -82,26 +62,78 @@ def get_spotify_session():
             # we have a valid session, so we return it.
             return sp
         except spotipy.oauth2.SpotifyOauthError:
-            print("Invalid key info was entered. Please try again.")
+            print("Invalid key info was entered. Please edit your credentials then retry.")
+            quit_nicely()
+
+
+# get the username information using i/o
+def get_username():
+    # get the user information
+    username = extract_username(input("Please enter your spotify URl\n"))
     
+    # create an un-authenticated session to check if our username is valid
+    temp_session = spotipy.Spotify()
+    
+    # keep looping until a valid username is received.
+    while True:
+        try:
+            # if this is not a valid username, we raise the handled exception.
+            temp_session.user(username)
+            
+            # valid username, return it.
+            return username
+        except spotipy.SpotifyException:
+            username = extract_username(input("Invalid username, please enter again\n"))
+
+
+# our main "page", where user will choose what they want to access
+def table_of_commands(spotify_session):
+    # default choice to start while loop
+    choice = -1
+    
+    # remain on the table of contents page until we decide to quit
+    while choice != 4:
+        choice = int(input("How would you like to find your new songs?\n" +
+                           "1. Find new songs using a playlist\n" + 
+                           "2. Find new songs using a list of songs\n" +
+                           "3. Find new new using a list of albums\n" + 
+                           "4. Quit\n"))
+        # if we want to use a playlist
+        if choice == 1:
+            pass
+        # if we want to use a list of songs
+        elif choice == 2:
+            pass
+        # if we want to use a list of albums
+        elif choice == 3:
+            pass
+        # if we want to quit
+        elif choice == 4:
+            quit_nicely()
+
+
+# quit the program nicely by stopping and waiting for input.
+def quit_nicely():
+    input("The program will now close. Please press enter to continue.")
+    quit()
+
 
 def main():
-    # testing with the different ways one could enter a spotify track.
-    sp = get_spotify_session()
-    track = "spotify:track:5PwCuqzezD4a7mfxMNwk86"
-    print(sp.track(track))
-    track = sp.track("6ZtJwCyyH3HpRXpL1TI1Cp")
-    print(track)
+    print("Welcome to Spot my New Song!\n")
+    print("You will now attempt to log on.\n")
     
-    # print user info
-    print(sp.me())
+    # get user credentials to log on
+    spotify_session = get_spotify_session()
+    print("Logged on successfully!")
     
-    set_playlists = sp.current_user_playlists()["items"]
+    # navigate to the table of contents
+    table_of_commands(spotify_session)
+    
+    '''set_playlists = spotify_session.current_user_playlists()["items"]
     for index in range(len(set_playlists)):
         print("%d. %s - %s" % (index + 1, set_playlists[index]["name"], 
-                               set_playlists[index]["owner"]["id"]))
-    #print(sp.current_user_playlists()['items'][0]['name'])
-    
+                               set_playlists[index]["owner"]["id"]))'''
+
 
 if __name__ == "__main__":
     main()

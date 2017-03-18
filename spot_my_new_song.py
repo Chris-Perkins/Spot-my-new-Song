@@ -18,59 +18,52 @@ import os
 
 
 # get the username of a user by extraction from URls
-def extract_username(URl):
+def extract_username(file_username):
     # simply handling the different types of inputs for usernames
     # ways of inputting:
     # 1: spotify:user:username
     # 2: https://open.spotify.com/user/username
     # 3: username
+    username = file_username[11:]
     
-    if len(URl) > 13 and URl[:13] == "spotify:user:":
-        return URl[13:]
-    elif len(URl) > 30 and URl[:30] == "https://open.spotify.com/user/":
-        return URl[30:]
+    if len(username) > 13 and username[:13] == "spotify:user:":
+        return username[13:]
+    elif len(username) > 30 and username[:30] == "https://open.spotify.com/user/":
+        return username[30:]
     else:
-        return URl
+        return username
 
 
 # get client credentials
 def get_spotify_session():
     # final variable detailing our scope/needed permissions
     scope = "playlist-read-private user-library-read"
-    
-    # get the user we're trying to log in
-    username = get_username()
-    
-    # loop until we receive a valid session
-    while True:
-        # get client id and secret keys
-        client_id = input("Please enter your client ID key:\n")
-        client_secret = input("Please enter your client secret key\n")
-        
-        try:
-            # get access token
-            token = util.prompt_for_user_token(username, scope, 
-                                               client_id, client_secret,
-                                               "http://localhost:8888/callback")
+    username, client_id, client_secret = try_open_credentials_file()
+    #username, client_id, client_secret = input().split()
+    try:
+        # get access token
+        token = util.prompt_for_user_token(username, scope, 
+                                            client_id, client_secret,
+                                            "http://localhost:8888/callback")
             
-            # attempt to create a new spotify session
-            sp = spotipy.Spotify(auth = token)
+        # attempt to create a new spotify session
+        sp = spotipy.Spotify(auth = token)
             
-            # raises the handled exception below if authentication was unsuccessful.
-            sp.me()
+        # raises the handled exception below if authentication was unsuccessful.
+        sp.me()
             
-            # we have a valid session, so we return it.
-            return sp
-        except spotipy.oauth2.SpotifyOauthError:
-            print("Invalid key info was entered. Please edit your credentials then retry.")
-            quit_nicely()
+        # we have a valid session, so we return it.
+        return sp
+    except spotipy.oauth2.SpotifyOauthError:
+        print("Invalid credentials entered. Please edit your credentials then retry.")
+        quit_nicely()
+    except spotipy.client.SpotifyException:
+        print("No credentials are set. Please edit your credentials in credentials.txt")
+        quit_nicely()
 
 
-# get the username information using i/o
-def get_username():
-    # get the user information
-    username = extract_username(input("Please enter your spotify URl\n"))
-    
+# determines whether a username is valid
+def is_valid_username(username):
     # create an un-authenticated session to check if our username is valid
     temp_session = spotipy.Spotify()
     
@@ -118,6 +111,39 @@ def quit_nicely():
     quit()
 
 
+# open the credentials file, return user, client id, and secret key from
+# the file if we were successful in opening.
+def try_open_credentials_file():
+    try:
+        file_credentials = open("credentials.txt", "r")
+        
+        client_username = extract_username(file_credentials.readline())
+        client_id = file_credentials.readline()[12:]
+        secret_key = file_credentials.readline()[13:]
+        
+        file_credentials.close()
+        
+        return (client_username.replace("\n", ""), 
+                client_id.replace("\n", ""), 
+                secret_key.replace("\n", ""))
+    except FileNotFoundError:
+        print("Credentials file missing. Creating...")
+        create_credentials_file()
+        print("File created. Please edit the file to include your credentials.")
+        quit_nicely()
+    except IndexError:
+        print("Invalid credentials entered. Please try again.")
+        quit_nicely()
+
+
+def create_credentials_file():
+    file_credentials = open("credentials.txt", "w")
+    file_credentials.write("Username = \n")
+    file_credentials.write("Client-ID = \n")
+    file_credentials.write("Secret Key = ")
+    
+
+
 def main():
     print("Welcome to Spot my New Song!\n")
     print("You will now attempt to log on.\n")
@@ -128,11 +154,6 @@ def main():
     
     # navigate to the table of contents
     table_of_commands(spotify_session)
-    
-    '''set_playlists = spotify_session.current_user_playlists()["items"]
-    for index in range(len(set_playlists)):
-        print("%d. %s - %s" % (index + 1, set_playlists[index]["name"], 
-                               set_playlists[index]["owner"]["id"]))'''
 
 
 if __name__ == "__main__":

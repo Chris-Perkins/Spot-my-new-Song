@@ -25,10 +25,10 @@ def table_of_commands(spotify_session):
     while choice != 4:
         try:
             choice = int(input("How would you like to find your new songs?\n" +
-                                "1. Find new songs using a playlist\n" + 
-                                "2. Find new songs using a list of songs\n" +
-                                "3. Find new new using a list of albums\n" + 
-                                "4. Quit\n"))
+                                "1 - Find new songs using a playlist\n" + 
+                                "2 - Find new songs using a list of songs\n" +
+                                "3 - Find new new using a list of albums\n" + 
+                                "4 - Quit\n"))
             # if we want to use a playlist
             if choice == 1:
                 recommend_handling.get_playlist_recommendations(spotify_session)
@@ -60,7 +60,6 @@ def main():
     # get user credentials to log on
     spotify_session = session_handling.get_spotify_session()
     print("Logged on successfully!")
-    
     # navigate to the table of contents
     table_of_commands(spotify_session)
 

@@ -5,9 +5,10 @@ created to help avoid clutter in spot_my_new_song
 
 import spotipy
 
+SET_YES = {"yes", "y", "ya", "ye"}
+
 # get recommendations of playlists
 def get_playlist_recommendations(spotify_session):
-    SET_YES = {"yes", "y", "ya", "ye"}
     
     # get the playlist we wish to access
     def get_playlist_choice():
@@ -110,5 +111,19 @@ def get_album_recommendations(spotify_session):
 
 
 # skeleton of later function
-def get_song_recommendations():
-    pass
+# doesn't seem to work right now. :(
+def get_song_recommendations(spotify_session):
+    def main():
+        add_more = True
+        while(add_more):
+            list_songs = input("Please enter a list of Spotify URIs\n" +
+                               "Do not separate the list by spaces.\n").split("spotify:track:")[1:]
+            print(list_songs)
+            add_more = input("\nAdd another list of songs?\n") in SET_YES
+        
+        list_recommendations = spotify_session.recommendations(
+                                    seed_tracks = list_songs, limit = 20)
+        
+        print(list_recommendations)
+    
+    main()

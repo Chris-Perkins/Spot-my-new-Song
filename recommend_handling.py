@@ -107,12 +107,32 @@ def get_playlist_recommendations(spotify_session):
 
 # skeleton of later function
 def get_album_recommendations(spotify_session):
-    pass
+    list_songs = list()
+    
+    add_more = True
+    while add_more:
+        try:
+            album = spotify_session.album(input("Please enter an album URI\n"))
+            print(album)
+            
+            #to-do: format multiple artists better
+            artists = ""
+            for artist in album["artists"]:
+                artists = artists + artist["name"]
+            
+            if input("Really add \"%s\" by %s? Y\N\n" % (album["name"], artists
+                                                 )).lower() in SET_YES:
+                print("Got here")
+            
+            add_more = input("Would you like to add another playlist? Y/N\n").lower() in SET_YES
+        except spotipy.client.SpotifyException:
+            print("Invalid album id entered. Please enter a valid Album URI.")
+        
 
 
 # skeleton of later function
 # doesn't seem to work right now. :(
-def get_song_recommendations(spotify_session):
+'''def get_song_recommendations(spotify_session):
     def main():
         add_more = True
         while(add_more):
@@ -126,4 +146,4 @@ def get_song_recommendations(spotify_session):
         
         print(list_recommendations)
     
-    main()
+    main()'''

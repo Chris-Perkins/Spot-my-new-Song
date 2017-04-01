@@ -26,20 +26,16 @@ def table_of_commands(spotify_session):
         try:
             choice = int(input("How would you like to find your new songs?\n" +
                                 "1 - Find new songs using a playlist\n" + 
-                                "2 - Find new songs using a list of songs\n" +
-                                "3 - Find new new using a list of albums\n" + 
-                                "4 - Quit\n"))
+                                "2 - Find new new using a list of albums\n" + 
+                                "3 - Quit\n"))
             # if we want to use a playlist
             if choice == 1:
                 recommend_handling.get_playlist_recommendations(spotify_session)
-            # if we want to use a list of songs
-            elif choice == 2:
-                recommend_handling.get_song_recommendations(spotify_session)
             # if we want to use a list of albums
-            elif choice == 3:
+            elif choice == 2:
                 recommend_handling.get_album_recommendations(spotify_session)
             # if we want to quit
-            elif choice == 4:
+            elif choice == 3:
                 quit_nicely()
             else:
                 print("Invalid choice. Please enter a value between 1-4.\n")

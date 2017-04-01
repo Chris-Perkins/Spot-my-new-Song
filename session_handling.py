@@ -21,7 +21,7 @@ def get_spotify_session():
             
         # attempt to create a new spotify session
         spotify_session = spotipy.Spotify(auth = token)
-            
+        
         # raises the handled exception below if authentication was unsuccessful.
         spotify_session.me()
             

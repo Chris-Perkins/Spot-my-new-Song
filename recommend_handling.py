@@ -7,6 +7,7 @@ import spotipy
 
 # get recommendations of playlists
 def get_playlist_recommendations(spotify_session):
+    SET_YES = {"yes", "y", "ya", "ye"}
     
     # get the playlist we wish to access
     def get_playlist_choice():
@@ -41,27 +42,62 @@ def get_playlist_recommendations(spotify_session):
                 print("Non-integer value entered.\n" + 
                       "Please enter an integer value between %d and %d" % (1, i + 3))
             
-    # skeleton function for future song slection
+    # skeleton function for future song selection
     def get_custom_song_selection(playlist):
         pass
     
     
     # entry point for this function
     def main():
+        # list of songs/albums/artists we'll be getting recommendations from
         list_songs = list()
+        list_artists = list()
+        
         add_more = True
         while add_more:
             playlist = get_playlist_choice()
-            print("%s successfully added." % playlist["name"])
             
             if input("Would you like to use all songs in this playlist?\n" + 
-                                 "Y to use all playlists, N to use a custom subset").lower() in {"yes", "y", "ya", "ye"}:
-                #to-do: add all tracks here while staying under Spotify API limits
-                pass
+                                 "Y to use all songs, N to use a custom subset\n").lower() in SET_YES:
+                '''print("TEST")
+                results = spotify_session.user_playlist(spotify_session.me()["id"], 
+                                              playlist["id"], fields = "tracks")
+                print("TEST2")
+                tracks = spotify_session.tracks(results["tracks"])
+                print(tracks)
+                print("TEST3")'''
+                
+                # PROBLEM: DISCOVERED JANK HERE.
+                # something is wrong with the Spotipy wrapper.
+                # I'll attempt to fix this later.
+                # seems to be caused by non-latin characters.
+                results = spotify_session.user_playlist(spotify_session.me()["id"], playlist["id"],
+                                           fields="tracks,next")
+                tracks = results['tracks']
+                for i, item in enumerate(tracks['items']):
+
+                    track = item['track']
+                    print("Attempting to add %s" % track['name'])
+                    if track['name'] != None:
+                        print("   %d %32.32s %s" % (i, track['artists'][0]['name'],
+                                                    track['name']))
+                    print('Doesn\'t get here on Japanese artist')
+                print("HI")
+                while tracks['next']:
+                    tracks = spotify_session.next(tracks)
+                    for i, item in enumerate(tracks['items']):
+                        track = item['track']
+                        print(track)
+                        if track != None:
+                            print("   %d %32.32s %s" % (i, track['artists'][0]['name'],
+                                                            track['name']))
+                print("OH NO")
             else:
                 # to-do: custom input tracks here
                 print(playlist["tracks"])
-            add_more = input("Would you like to add another playlist?").lower() in {"yes", "y", "ya", "ye"}
+            print("NOT GET HERE? Y!")
+            print("%s successfully added.\n" % playlist["name"])
+            add_more = input("Would you like to add another playlist? Y/N\n").lower() in SET_YES
         
     
     

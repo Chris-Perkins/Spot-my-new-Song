@@ -6,10 +6,7 @@ M = medium priority
 L = low priority
 -----
 H: Playlist Selection
-M: Song Selection
-M: Album Selection
-H: Song indices selection
-L: UI With Windows (tkinter)
+H: Album Selection
 '''
 
 import session_handling
@@ -25,7 +22,7 @@ def table_of_commands(spotify_session):
     while choice != 4:
         try:
             choice = int(input("How would you like to find your new songs?\n" +
-                                "1 - Find new songs using a playlist\n" + 
+                                "1 - Find new songs using a list of playlists\n" + 
                                 "2 - Find new new using a list of albums\n" + 
                                 "3 - Quit\n"))
             # if we want to use a playlist
@@ -37,10 +34,11 @@ def table_of_commands(spotify_session):
             # if we want to quit
             elif choice == 3:
                 quit_nicely()
+            # invalid choice entered
             else:
                 print("Invalid choice. Please enter a value between 1-4.\n")
         except ValueError:
-            print("Please enter an integer value between 1-4.\n")
+            print("Value entered was not an integer. Please enter an integer value between 1-4.\n")
 
 
 # quit the program nicely by stopping and waiting for input.

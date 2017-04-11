@@ -1,5 +1,6 @@
 *.project
 *.pydevproject
+*.txt
 
 # Windows image file caches
 Thumbs.db
@@ -51,4 +52,3 @@ Temporary Items
 __pycache__/recommend_handling.cpython-36.pyc
 *.pyc
 .cache-nepuznic
-credentials.txt

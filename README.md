@@ -14,7 +14,7 @@ Input your favorite albums and playlists, and get out some songs to try!
 ### Requirements:
 * [Python 2/3](https://www.python.org/)
 * [Spotipy](https://github.com/plamere/spotipy)
-* [A Spotify Access Token](My Applications)  
+* [A Spotify Access Token](https://developer.spotify.com/my-applications/#!/)  
 
 ### To Get Started
 Create a credentials.txt file where the spot my new song scripts are located, and input the following:

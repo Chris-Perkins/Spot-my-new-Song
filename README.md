@@ -17,8 +17,8 @@ Input your favorite albums and playlists, and get out some songs to try!
 * [A Spotify Access Token](https://developer.spotify.com/my-applications/#!/)  
 
 ### To Get Started
-Create a credentials.txt file where the spot my new song scripts are located, and input the following:
-  Username = your_user_name
-  Client-ID = your_client_id
-  Secret Key = your_secret_key
-  *alternatively, you can simply run the spot my song script.  
+Create a credentials.txt file where the spot my new song scripts are located, and input the following:  
+  * Username = your_user_name  
+  * Client-ID = your_client_id  
+  * Secret Key = your_secret_key  
+  *alternatively, you can simply run the spot my song script.

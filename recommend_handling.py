@@ -49,7 +49,7 @@ def get_playlist_recommendations(spotify_session):
     # entry point for this function
     def main():
         # list of songs/albums/artists we'll be getting recommendations from
-        list_songs = list()
+        list_spotify_recommends = list()
         
         add_more = True
         while add_more:
@@ -58,14 +58,17 @@ def get_playlist_recommendations(spotify_session):
             results = spotify_session.user_playlist(spotify_session.me()["id"], playlist["id"],
                            fields="tracks,next")
             
-            # set recommend helper weights
+            # set recommend helper weights for this playlist
             recommend_helper.set_weights(spotify_session, results, True)
-            # get all song URIs from this playlist
-            list_songs.extend(recommend_helper.get_list_songs(spotify_session, results))
+            # get recommendations for songs in this playlist
+            #list_spotify_recommends.extend(
+            #    recommend_helper.get_spotify_recommendations(spotify_session, results))
             
             print("%s successfully added.\n" % playlist["name"])
             
             add_more = input("Would you like to add another playlist? Y/N\n").lower() in SET_YES
+            
+        
         
     main()
 

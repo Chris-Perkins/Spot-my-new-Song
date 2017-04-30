@@ -59,10 +59,12 @@ def get_playlist_recommendations(spotify_session):
                            fields="tracks,next")
             
             # set recommend helper weights for this playlist
-            recommend_helper.set_weights(spotify_session, results, True)
+            recommend_helper.set_weights(spotify_session, results.copy(), True)
             # get recommendations for songs in this playlist
-            #list_spotify_recommends.extend(
-            #    recommend_helper.get_spotify_recommendations(spotify_session, results))
+            
+            list_spotify_recommends.extend(
+                recommend_helper.get_spotify_recommendations(spotify_session, results.copy()))
+            print(list_spotify_recommends)
             
             print("%s successfully added.\n" % playlist["name"])
             

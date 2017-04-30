@@ -11,7 +11,6 @@ H: Album Selection
 
 import session_handling
 import recommend_handling
-import tkinter
 
 # our main "page", where user will choose what they want to access
 def table_of_commands(spotify_session):

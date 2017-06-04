@@ -17,6 +17,8 @@ DICT_OCCURRENCE_VALUES = {
 # Dictionary holding current weights of song recommendations
 # Based off dictionary occurrence values.
 DICT_OCCURRENCES = {}
+SET_RECOMMENDATION_URIS = set()
+LIST_RECOMMENDATION_SONGS = list()
 
 # in: spotify session, a dictionary of songs
 # out: a list of the corresponding song URIs
@@ -41,11 +43,11 @@ def get_list_songs(spotify_session, dict_songs):
 
 # get recommendations from spotify for a list of songs.
 def get_spotify_recommendations(spotify_session, dict_songs):
-    list_recommendations = list()
+    list_spotify_recommends = list()
     # list of 5 songs
     list_five_songs = list()
     
-    i = 0
+    i = 1
     # get recommendations based on every list of 5 songs (5 songs is max seed limit)
     # per the Spotify API).
     while dict_songs["tracks"]:
@@ -54,9 +56,9 @@ def get_spotify_recommendations(spotify_session, dict_songs):
         
             # if we're on the 5th song or at the end of the list,
             # get recommendations for this list then clear list
-            if (i % 5 == 0 and i != 0) or i + 1 == len(dict_songs):
+            if i % 5 == 0 or i + 1 == len(dict_songs["tracks"]["items"]):
                 # get the recommendations for these 5 songs
-                list_recommendations.extend(spotify_session.recommendations(
+                list_spotify_recommends.extend(spotify_session.recommendations(
                     seed_tracks = list_five_songs)["tracks"])
             
                 # reset our list
@@ -65,44 +67,75 @@ def get_spotify_recommendations(spotify_session, dict_songs):
             i += 1
         dict_songs["tracks"] = spotify_session.next(dict_songs["tracks"])
     
-    return list_recommendations
+    return list_spotify_recommends
     
 
-# skeleton of later function
-def get_recommendations(spotify_session, list_songs, limit):
-    pass
-
-
-# in: a song, whether or not the source of this song is the user
-# out: none
-# helper function for set_weights. Sets weights of songs received
-def set_weights_helper(song, source_is_user):
-    print(song)
+# get recommendations based on occurrence values
+def get_recommendations(spotify_session, limit):
+    list_recommendations = list()
+    for song in LIST_RECOMMENDATION_SONGS:
+        # set occurrence value based on values from set_weight(...)
+        total_occurrence_value = 0
+        total_occurrence_value += DICT_OCCURRENCES[song["album"]["uri"]]
+        for artist in song["artists"]:
+            total_occurrence_value += DICT_OCCURRENCES[artist["uri"]]
+        total_occurrence_value += DICT_OCCURRENCES[song["uri"]]
+        
+        # if this song is not already in our playlist
+        if(total_occurrence_value > 0):
+            list_recommendations.append([total_occurrence_value, song])
     
-    for artist in song["track"]["artists"]:
-        if artist["uri"] not in DICT_OCCURRENCES:
-            DICT_OCCURRENCES[artist["uri"]] = DICT_OCCURRENCE_VALUES["ARTIST"][source_is_user]
-        else:
-            DICT_OCCURRENCES[artist["uri"]] += DICT_OCCURRENCE_VALUES["ARTIST"][source_is_user]
+    list_recommendations.sort(key=lambda x: x[0])
     
-    if song["track"]["album"]["uri"] not in DICT_OCCURRENCES:
-        DICT_OCCURRENCES[song["track"]["album"]["uri"]] = DICT_OCCURRENCE_VALUES["ALBUM"][source_is_user]
-    else:
-        DICT_OCCURRENCES[song["track"]["album"]["uri"]] += DICT_OCCURRENCE_VALUES["ALBUM"][source_is_user]
+    list_output = list()
+    for index in range(min(limit, len(list_recommendations))):
+        list_output.append(list_recommendations[index][1])
+    
+    return list_output
 
 
-# in: dict of songs, whether or the source is user's library
+# in: a valid spotify session, dict of songs
 # out: none
 # Used to help our recommending algorithm
 # NOTE: Could be integrated with get_recommendations, but that
 # makes functions confusing. No reason to do it other than
 # overhead optimization by not iterating twice and not making copies of dicts.
-def set_weights(spotify_session, dict_songs, source_is_user):
+def set_weights_user(spotify_session, dict_songs):
     # while we are on a page that exists...
     while dict_songs["tracks"]:
         # get all items in this page
         for song in dict_songs["tracks"]["items"]:
-            set_weights_helper(song, source_is_user)
+            set_weights_helper(song["track"], True)
             
         # visit the next page...
         dict_songs["tracks"] = spotify_session.next(dict_songs["tracks"])
+        
+
+
+def set_weights_recommended(spotify_session, list_spotify_recommends):
+    for song in list_spotify_recommends:
+        # prevent the song from being added twice to list
+        if song["uri"] not in SET_RECOMMENDATION_URIS:
+            SET_RECOMMENDATION_URIS.add(song["uri"])
+            LIST_RECOMMENDATION_SONGS.append(song)
+        set_weights_helper(song, False)
+
+
+# in: a song, bool of if source of this song is the user
+# out: none
+# helper function for set_weights. Sets weights of songs received
+def set_weights_helper(song, source_is_user):
+    for artist in song["artists"]:
+        if artist["uri"] not in DICT_OCCURRENCES:
+            DICT_OCCURRENCES[artist["uri"]] = DICT_OCCURRENCE_VALUES["ARTIST"][source_is_user]
+        else:
+            DICT_OCCURRENCES[artist["uri"]] += DICT_OCCURRENCE_VALUES["ARTIST"][source_is_user]
+    
+    if song["album"]["uri"] not in DICT_OCCURRENCES:
+        DICT_OCCURRENCES[song["album"]["uri"]] = DICT_OCCURRENCE_VALUES["ALBUM"][source_is_user]
+    else:
+        DICT_OCCURRENCES[song["album"]["uri"]] += DICT_OCCURRENCE_VALUES["ALBUM"][source_is_user]
+    if song["uri"] not in DICT_OCCURRENCES:
+        DICT_OCCURRENCES[song["uri"]] = DICT_OCCURRENCE_VALUES["SONG"][source_is_user]
+    else:
+        DICT_OCCURRENCES[song["uri"]] += DICT_OCCURRENCE_VALUES["SONG"][source_is_user]

@@ -12,7 +12,6 @@ SET_YES = {"yes", "y", "ya", "ye"}
 
 # get recommendations of playlists
 def get_playlist_recommendations(spotify_session):
-    
     # get the playlist we wish to access
     def get_playlist_choice():
         playlists = spotify_session.current_user_playlists()["items"]
@@ -59,26 +58,32 @@ def get_playlist_recommendations(spotify_session):
                            fields="tracks,next")
             
             # set recommend helper weights for this playlist
-            recommend_helper.set_weights(spotify_session, results.copy(), True)
+            recommend_helper.set_weights_user(spotify_session, results.copy())
             # get recommendations for songs in this playlist
-            
-            list_spotify_recommends.extend(
-                recommend_helper.get_spotify_recommendations(spotify_session, results.copy()))
-            print(list_spotify_recommends)
             
             print("%s successfully added.\n" % playlist["name"])
             
             add_more = input("Would you like to add another playlist? Y/N\n").lower() in SET_YES
-            
         
+        list_spotify_recommends.extend(recommend_helper.
+                                       get_spotify_recommendations(spotify_session, 
+                                                                   results.copy()))
+        recommend_helper.set_weights_recommended(spotify_session, 
+                                                 list_spotify_recommends)
+        
+        print("\nI recommend the following:")
+        for song in recommend_helper.get_recommendations(spotify_session, 20):
+            artist_string = ", ".join(x["name"] for x in song["artists"])
+            print("%s - %s" % (artist_string, song["name"]))
+        print()
         
     main()
 
 
 # album recommendation handler
 def get_album_recommendations(spotify_session):
-    
     add_more = True
+    
     while add_more:
         try:
             album = spotify_session.album(input("Please enter an album URI\n"))

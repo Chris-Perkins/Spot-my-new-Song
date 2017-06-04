@@ -21,4 +21,4 @@ Create a credentials.txt file where the spot my new song scripts are located, an
   * Username = your_user_name  
   * Client-ID = your_client_id  
   * Secret Key = your_secret_key  
-  *alternatively, you can simply run the spot my song script.
+  *alternatively, you can simply run the spot my song script to generate this file.

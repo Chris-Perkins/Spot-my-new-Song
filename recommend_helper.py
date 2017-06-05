@@ -85,7 +85,7 @@ def get_recommendations(spotify_session, limit):
         if(total_occurrence_value > 0):
             list_recommendations.append([total_occurrence_value, song])
     
-    list_recommendations.sort(key=lambda x: x[0])
+    list_recommendations.sort(key=lambda x: x[0], reverse=True)
     
     list_output = list()
     for index in range(min(limit, len(list_recommendations))):

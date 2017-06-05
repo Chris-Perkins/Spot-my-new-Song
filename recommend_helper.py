@@ -91,6 +91,11 @@ def get_recommendations(spotify_session, limit):
     for index in range(min(limit, len(list_recommendations))):
         list_output.append(list_recommendations[index][1])
     
+    # reset everything
+    LIST_RECOMMENDATION_SONGS.clear()
+    DICT_OCCURRENCES.clear()
+    SET_RECOMMENDATION_URIS.clear()
+    
     return list_output
 
 

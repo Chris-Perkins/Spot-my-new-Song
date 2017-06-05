@@ -74,7 +74,7 @@ def get_playlist_recommendations(spotify_session):
         print("\nI recommend the following:")
         for song in recommend_helper.get_recommendations(spotify_session, 20):
             artist_string = ", ".join(x["name"] for x in song["artists"])
-            print("%s - %s" % (artist_string, song["name"]))
+            print("%s: %s" % (artist_string, song["name"]))
         print()
         
     main()

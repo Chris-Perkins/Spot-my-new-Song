@@ -13,7 +13,7 @@ Input your favorite albums and playlists, and get out some songs to try!
   1. Follow on screen instructions
 
 ### Requirements:
-* [Python 2/3](https://www.python.org/)
+* [Python 3+](https://www.python.org/)
 * [Spotipy](https://github.com/plamere/spotipy)
 * [A Spotify Access Token](https://developer.spotify.com/my-applications/#!/)  
 

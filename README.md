@@ -2,6 +2,7 @@
 Input your favorite albums and playlists, and get out some songs to try!  
 
 ### How to Use:
+  1. Open your terminal to the file path where Spot my New Song is located
   1. In the command line, type "python spot_my_new_song.py"
     If an error occurs, please consult to the "To Get Started" section
   1. Select an option.

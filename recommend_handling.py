@@ -23,15 +23,15 @@ def get_playlist_recommendations(spotify_session):
         while choice != i + 2:
             try:
                 choice = int(input(("\nPlease enter the index (%d - %d)" + 
-                           " of the playlist you would like to select.\n") % (1, i + 2)))
+                           " of the playlist you would like to select.\n> ") % (1, i + 2)))
                 
                 # playlist from list
                 if choice > 0 and choice <= i + 1:
                     # arrays are 0 indexed. -1
-                    correct_playlist = input("Use playlist \"%s\"? Y/N\n" 
+                    correct_playlist = input("Use playlist \"%s\"? Y/N\n> " 
                                              % playlists[choice - 1]["name"])
 
-                    if correct_playlist.lower() in {"yes", "y", "ya", "ye"}:
+                    if correct_playlist.lower() in SET_YES:
                             return playlists[choice - 1]
                 # custom playlist enter
                 # return to main menu
@@ -63,7 +63,7 @@ def get_playlist_recommendations(spotify_session):
             
             print("%s successfully added.\n" % playlist["name"])
             
-            add_more = input("Would you like to add another playlist? Y/N\n").lower() in SET_YES
+            add_more = input("Would you like to add another playlist? Y/N\n> ").lower() in SET_YES
         
         list_spotify_recommends.extend(recommend_helper.
                                        get_spotify_recommendations(spotify_session, 
@@ -86,7 +86,7 @@ def get_album_recommendations(spotify_session):
     
     while add_more:
         try:
-            album = spotify_session.album(input("Please enter an album URI\n"))
+            album = spotify_session.album(input("Please enter an album URI\n> "))
             print(album)
             
             #to-do: format multiple artists better
@@ -97,6 +97,6 @@ def get_album_recommendations(spotify_session):
             if input("test").lower() in SET_YES:
                 print("Got here")
             
-            add_more = input("Would you like to add another album? Y/N\n").lower() in SET_YES
+            add_more = input("Would you like to add another album? Y/N\n> ").lower() in SET_YES
         except spotipy.client.SpotifyException:
             print("Invalid album id entered. Please enter a valid Album URI.")

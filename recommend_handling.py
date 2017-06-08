@@ -14,7 +14,10 @@ SET_YES = {"yes", "y", "ya", "ye"}
 def get_playlist_recommendations(spotify_session):
     # get the playlist we wish to access
     def get_playlist_choice():
+        # get all playlists, then filter playlists where user is not owner.
         playlists = spotify_session.current_user_playlists()["items"]
+        playlists = [playlist for playlist in playlists if playlist["owner"]["id"] == spotify_session.me()["id"]]
+        
         for i in range(len(playlists)):
             print("%d - %s" % (i + 1, playlists[i]["name"]))
         print("%d - Return to main menu" % (i + 2))
@@ -54,6 +57,10 @@ def get_playlist_recommendations(spotify_session):
         while add_more:
             playlist = get_playlist_choice()
             
+            # user defined go to main menu
+            if playlist == None:
+                return
+            
             results = spotify_session.user_playlist(spotify_session.me()["id"], playlist["id"],
                            fields="tracks,next")
             
@@ -64,15 +71,19 @@ def get_playlist_recommendations(spotify_session):
             print("%s successfully added.\n" % playlist["name"])
             
             add_more = input("Would you like to add another playlist? Y/N\n> ").lower() in SET_YES
-        
+            print()
+            
         list_spotify_recommends.extend(recommend_helper.
                                        get_spotify_recommendations(spotify_session, 
                                                                    results.copy()))
         recommend_helper.set_weights_recommended(spotify_session, 
                                                  list_spotify_recommends)
         
-        print("\nI recommend the following:")
-        for song in recommend_helper.get_recommendations(spotify_session, 20):
+        
+        recommendations = recommend_helper.get_recommendations(spotify_session, 20)
+        
+        print("I recommend the following:")
+        for song in recommendations:
             artist_string = ", ".join(x["name"] for x in song["artists"])
             print("%s: %s" % (artist_string, song["name"]))
         print()

@@ -43,37 +43,48 @@ def get_list_songs(spotify_session, dict_songs):
 
 # get recommendations from spotify for a list of songs.
 def get_spotify_recommendations(spotify_session, dict_songs):
+    print("Fetching songs...")
+    
     list_spotify_recommends = list()
     # list of 5 songs as referenced by https://developer.spotify.com/web-api/get-recommendations/
     list_five_songs = list()
-    
-    i = 1
-    # get recommendations based on every list of 5 songs (5 songs is max seed limit)
-    # per the Spotify API).
+    songCount = 0
     while dict_songs["tracks"]:
-        for song in dict_songs["tracks"]["items"]:
+        for song in dict_songs["tracks"]["items"]:  
+            songCount += 1
+            
+            if(songCount % 250 == 0):
+                print("Parsing song #%d..." % songCount)
+            
             list_five_songs.append(song["track"]["uri"])
         
             # if we're on the 5th song or at the end of the list,
             # get recommendations for this list then clear list
-            if i % 5 == 0 or i + 1 == len(dict_songs["tracks"]["items"]):
+            if songCount % 5 == 0 or songCount + 1 == len(dict_songs["tracks"]["items"]):
                 # get the recommendations for these 5 songs
                 list_spotify_recommends.extend(spotify_session.recommendations(
                     seed_tracks = list_five_songs)["tracks"])
             
                 # reset our list
-                list_five_songs = list()
-        
-            i += 1
+                list_five_songs = list()        
         dict_songs["tracks"] = spotify_session.next(dict_songs["tracks"])
+        
+    print("Finished parsing %d songs!\n" % songCount)
     
     return list_spotify_recommends
     
 
 # get recommendations based on occurrence values
 def get_recommendations(spotify_session, limit):
+    print("Fetching recommendations...")
+    
     list_recommendations = list()
+    recommendation_count = 0
     for song in LIST_RECOMMENDATION_SONGS:
+        recommendation_count += 1
+        if (recommendation_count % 1000 == 0):
+            print("Parsing recommendation #%d" % recommendation_count)
+        
         # set occurrence value based on values from set_weight(...)
         total_occurrence_value = 0
         total_occurrence_value += DICT_OCCURRENCES[song["album"]["uri"]]
@@ -90,6 +101,8 @@ def get_recommendations(spotify_session, limit):
         # if this song is not already in our playlist
         if(total_occurrence_value > 0):
             list_recommendations.append([total_occurrence_value, song])
+            
+    print("Finished parsing %d recommendations!\n" % recommendation_count)
     
     list_recommendations.sort(key=lambda x: x[0], reverse=True)
     

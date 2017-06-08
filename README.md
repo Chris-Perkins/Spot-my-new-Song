@@ -3,14 +3,10 @@ Input your favorite albums and playlists, and get out some songs to try!
 
 ### How to Use:
   1. Open your terminal to the file path where Spot my New Song is located
-  1. In the command line, type "spot_my_new_song.py"  
+  1. In the command line, run spot_my_new_song.py
         *If an error occurs, please consult to the "To Get Started" section*
-  1. Select an option.
-  1. To input an album or playlist, navigate to the playlist in your Spotify app.
-  1. Click the grip (next to the play button)
-  1. Select Share -> URI
-  1. Input the URI into the console where prompted.
-  1. Follow on screen instructions
+  1. Enter the URL you were redirected when prompted
+  1. Follow on-screen instructions
 
 ### Requirements:
 * [Python 3+](https://www.python.org/)

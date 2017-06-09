@@ -9,9 +9,9 @@ import spotipy
 # Song in library valued very highly negative to prevent
 # recommending a song that is already in one of these playlists.
 DICT_OCCURRENCE_VALUES = {
-                          "ARTIST": {False: 1, True: 4}, 
-                          "ALBUM" : {False: 2, True: 5}, 
-                          "SONG"  : {False: 3, True: int(-1e10)}
+                          "ARTIST": {False: 1, True: 3}, 
+                          "ALBUM" : {False: 2, True: 4}, 
+                          "SONG"  : {False: 10, True: int(-1e10)}
                          }
 
 # Dictionary holding current weights of song recommendations

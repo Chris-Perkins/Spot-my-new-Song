@@ -35,7 +35,8 @@ def get_playlist_recommendations(spotify_session):
                                              % playlists[choice - 1]["name"])
 
                     if correct_playlist.lower() in SET_YES:
-                            return playlists[choice - 1]
+                        print()
+                        return playlists[choice - 1]
                 # custom playlist enter
                 # return to main menu
                 elif choice == i + 2:
@@ -46,7 +47,7 @@ def get_playlist_recommendations(spotify_session):
                           "Please enter an integer value between %d and %d" % (1, i + 3))
             except ValueError:
                 print("Non-integer value entered.\n" + 
-                      "Please enter an integer value between %d and %d" % (1, i + 3))
+                      "Please enter an integer value between %d and %d\n" % (1, i + 3))
     
     # entry point for this function
     def main():

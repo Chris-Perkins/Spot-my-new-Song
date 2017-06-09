@@ -5,7 +5,6 @@ H = high priority
 M = medium priority
 L = low priority
 -----
-H: Playlist Selection
 H: Album Selection
 '''
 
@@ -24,6 +23,8 @@ def table_of_commands(spotify_session):
                                 "1 - Find new songs using a list of playlists\n" + 
                                 "2 - Find new songs using a list of albums\n" + 
                                 "3 - Quit\n> "))
+            print()
+            
             # if we want to use a playlist
             if choice == 1:
                 recommend_handling.get_playlist_recommendations(spotify_session)

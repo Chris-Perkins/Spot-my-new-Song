@@ -3,6 +3,7 @@ Recommendation helper to handle functions used in recommend_handling
 '''
 
 import spotipy
+import random
 
 # Occurrence values to help weigh our suggestions
 # False if it was not in library, true otherwise.
@@ -97,6 +98,8 @@ def get_recommendations(spotify_session, limit):
         artist_string = ", ".join(x["name"] for x in song["artists"])
         s = "%s: %s" % (artist_string, song["name"])
         total_occurrence_value += DICT_OCCURRENCES[s]
+        
+        total_occurrence_value = total_occurrence_value * random.random()
         
         # if this song is not already in our playlist
         if(total_occurrence_value > 0):

@@ -1,5 +1,5 @@
 # Spot my new Song
-Input your favorite albums and playlists, and get out some songs to try!  
+Input your favorite albums and playlists, and, with the help of a simple algo-rhythm, find new songs! 
 
 ### How to Use:
   1. Open your terminal to the file path where Spot my New Song is located

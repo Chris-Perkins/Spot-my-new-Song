@@ -13,26 +13,19 @@ import recommend_handling
 
 # our main "page", where user will choose what they want to access
 def table_of_commands(spotify_session):
-    # default choice to start while loop
+
     choice = 0
-    
     # remain on the table of contents page until we decide to quit
     while choice != 4:
         try:
             choice = int(input("How would you like to find your new songs?\n" +
-                                "1 - Find new songs using a list of playlists\n" + 
-                                "2 - Find new songs using a list of albums\n" + 
-                                "3 - Quit\n> "))
+                                "1 - Find new songs using a list of playlists\n" +
+                                "2 - Quit\n> "))
             print()
-            
-            # if we want to use a playlist
+
             if choice == 1:
                 recommend_handling.get_playlist_recommendations(spotify_session)
-            # if we want to use a list of albums
             elif choice == 2:
-                recommend_handling.get_album_recommendations(spotify_session)
-            # if we want to quit
-            elif choice == 3:
                 quit_nicely()
             # invalid choice entered
             else:

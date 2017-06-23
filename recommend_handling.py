@@ -90,25 +90,3 @@ def get_playlist_recommendations(spotify_session):
         print()
         
     main()
-
-
-# album recommendation handler
-def get_album_recommendations(spotify_session):
-    add_more = True
-    
-    while add_more:
-        try:
-            album = spotify_session.album(input("Please enter an album URI\n> "))
-            print(album)
-            
-            #to-do: format multiple artists better
-            artists = ""
-            for artist in album["artists"]:
-                artists = artists + artist["name"]
-            
-            if input("test").lower() in SET_YES:
-                print("Got here")
-            
-            add_more = input("Would you like to add another album? Y/N\n> ").lower() in SET_YES
-        except spotipy.client.SpotifyException:
-            print("Invalid album id entered. Please enter a valid Album URI.")

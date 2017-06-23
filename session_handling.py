@@ -22,11 +22,12 @@ def get_spotify_session():
         # attempt to create a new spotify session
         spotify_session = spotipy.Spotify(auth = token)
         
-        # raises the handled exception below if authentication was unsuccessful.
+        # raises a handled exception below if authentication was unsuccessful.
         spotify_session.me()
             
         # we have a valid session, so we return it.
         return spotify_session
+
     except spotipy.oauth2.SpotifyOauthError:
         print("Invalid credentials entered. Please edit your credentials then retry.")
         quit_nicely()

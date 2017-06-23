@@ -11,6 +11,7 @@ Input your favorite albums and playlists, and, with the help of a simple algo-rh
 ### Requirements:
 * [Python 3+](https://www.python.org/)
 * [Spotipy](https://github.com/plamere/spotipy)
+    * Set your callback URI to ```http://localhost:8888/callback```*
 * [A Spotify Access Token](https://developer.spotify.com/my-applications/#!/)  
 
 ### To Get Started

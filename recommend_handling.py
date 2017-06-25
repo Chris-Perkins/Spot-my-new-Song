@@ -103,16 +103,14 @@ def get_playlist_recommendations(spotify_session):
 
 def create_playlist_with_details(spotify_session, list_songs):
     playlist_name = None
-    print("Would you like to give this playlist a name? Y/N")
-    if (input("> ").lower() in SET_YES):
-        print("\nEnter a name for the new playlist")
-        playlist_name = input("> ")
+    print("Name for the playlist? (Leave empty for default)")
+    playlist_name = input("> ")
     print()
 
     print("Creating playlist...")
 
     # If we set a name, make it this name. Otherwise give default name
-    playlist_name = playlist_name if (playlist_name != None) else "SMNS Discover"
+    playlist_name = playlist_name if (playlist_name != "") else "SMNS Discover"
 
     created_playlist = spotify_session.user_playlist_create(spotify_session.me()["id"],
                                                             playlist_name,

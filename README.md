@@ -20,3 +20,5 @@ Create a credentials.txt file where the spot my new song scripts are located, an
   * Client-ID = your_client_id  
   * Secret Key = your_secret_key  
   *alternatively, you can simply run the spot my song script to generate this file.
+
+**Disclaimer:** There is an error that occasionally occurs when fetching songs. This is not an error in this code, but rather an error in the Spotipy library.

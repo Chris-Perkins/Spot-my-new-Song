@@ -16,7 +16,7 @@ def table_of_commands(spotify_session):
 
     choice = 0
     # remain on the table of contents page until we decide to quit
-    while choice != 4:
+    while choice != 2:
         try:
             choice = int(input("How would you like to find your new songs?\n" +
                                 "1 - Find new songs using a list of playlists\n" +

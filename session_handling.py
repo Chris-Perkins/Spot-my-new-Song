@@ -11,7 +11,7 @@ from spot_my_new_song import quit_nicely
 # get client credentials
 def get_spotify_session():
     # final variable detailing our scope/needed permissions
-    scope = "playlist-read-private user-library-read"
+    scope = "playlist-read-private user-library-read playlist-modify-private"
     username, client_id, client_secret = get_credentials()
     try:
         # get access token

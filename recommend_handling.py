@@ -16,7 +16,8 @@ def get_playlist_recommendations(spotify_session):
     def get_playlist_choice():
         # get all playlists, then filter playlists where user is not owner.
         playlists = spotify_session.current_user_playlists()["items"]
-        playlists = [playlist for playlist in playlists if playlist["owner"]["id"] == spotify_session.me()["id"]]
+        playlists = [playlist for playlist in playlists if playlist["owner"]["id"]
+                     == spotify_session.me()["id"]]
         
         for i in range(len(playlists)):
             print("%d - %s" % (i + 1, playlists[i]["name"]))
@@ -63,7 +64,7 @@ def get_playlist_recommendations(spotify_session):
                 return
             
             results = spotify_session.user_playlist(spotify_session.me()["id"], playlist["id"],
-                           fields="tracks,next")
+                                                    fields="tracks,next")
             
             # set recommend helper weights for this playlist
             recommend_helper.set_weights_user(spotify_session, results.copy())
@@ -81,12 +82,44 @@ def get_playlist_recommendations(spotify_session):
                                                  list_spotify_recommends)
         
         
-        recommendations = recommend_helper.get_recommendations(spotify_session, 20)
+        recommendations = recommend_helper.get_recommendations(spotify_session, 30)
         
         print("I recommend the following:")
         for song in recommendations:
             artist_string = ", ".join(x["name"] for x in song["artists"])
             print("%s: %s" % (artist_string, song["name"]))
         print()
+
+
+        print("Would you like to create a playlist with these recommendations? Y/N")
+        if (input("> ").lower() in SET_YES):
+            print()
+            create_playlist_with_details(spotify_session,
+                                         recommendations)
+        else:
+            print()
         
     main()
+
+def create_playlist_with_details(spotify_session, list_songs):
+    playlist_name = None
+    print("Would you like to give this playlist a name? Y/N")
+    if (input("> ").lower() in SET_YES):
+        print("\nEnter a name for the new playlist")
+        playlist_name = input("> ")
+    print()
+
+    print("Creating playlist...")
+
+    # If we set a name, make it this name. Otherwise give default name
+    playlist_name = playlist_name if (playlist_name != None) else "SMNS Discover"
+
+    created_playlist = spotify_session.user_playlist_create(spotify_session.me()["id"],
+                                                            playlist_name,
+                                                            public=False)
+    spotify_session.user_playlist_add_tracks(spotify_session.me()["id"],
+                                             created_playlist["id"],
+                                             list(song["id"] for song in list_songs),
+                                             position=None)
+
+    print("'%s' successfully created!\n" % playlist_name)

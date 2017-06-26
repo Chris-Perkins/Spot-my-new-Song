@@ -1,12 +1,5 @@
-'''
-TO DO:
------
-H = high priority
-M = medium priority
-L = low priority
------
-H: Album Selection
-'''
+# Spot my new Song - a project to help the user find new songs 
+# with a bias towards artists and albums the user is already known to like.
 
 import session_handling
 import recommend_handling

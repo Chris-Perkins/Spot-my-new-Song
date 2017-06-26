@@ -94,14 +94,15 @@ def get_playlist_recommendations(spotify_session):
         print("Would you like to create a playlist with these recommendations? Y/N")
         if (input("> ").lower() in SET_YES):
             print()
-            create_playlist_with_details(spotify_session,
-                                         recommendations)
+            create_playlist_with_songs(spotify_session, recommendations)
         else:
             print()
-        
+    
+    # Where we first enter this function
     main()
 
-def create_playlist_with_details(spotify_session, list_songs):
+# Creates a playlist with the given recommended songs
+def create_playlist_with_songs(spotify_session, list_songs):
     playlist_name = None
     print("Name for the playlist? (Leave empty for default)")
     playlist_name = input("> ")

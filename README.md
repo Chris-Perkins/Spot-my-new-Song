@@ -1,5 +1,10 @@
 # Spot my new Song
-Input your favorite albums and playlists, and, with the help of a simple algo-rhythm, find new songs! 
+Input your favorite albums and playlists, and, with the help of a simple algo-rhythm, find new songs!  
+
+### "How is this different from Spotify's recommendations?"  
+Spot my new Song has a bias towards finding songs by artists and albums that you already love.  
+While it does parse Spotify's own recommendations, you'll find results that you'll love (despite being randomized!).  
+If you desire, you can create a playlist with the given recommendations from within the app for ease of listening.
 
 ### How to Use:
   1. Open your terminal to the file path where Spot my New Song is located

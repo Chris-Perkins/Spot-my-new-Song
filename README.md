@@ -3,7 +3,7 @@ Input your favorite albums and playlists, and, with the help of a simple algo-rh
 
 ### "How is this different from Spotify's recommendations?"  
 Spot my new Song has a bias towards finding songs by artists and albums that you already love.  
-While it does parse Spotify's own recommendations, you'll find results that you'll love (despite being randomized!).  
+This is in contrast with Spotify's typical recommendations which are based on "connected" music tastes.  
 If you desire, you can create a playlist with the given recommendations from within the app for ease of listening.
 
 ### How to Use:

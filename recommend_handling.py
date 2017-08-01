@@ -68,20 +68,22 @@ def get_playlist_recommendations(spotify_session):
             
             # set recommend helper weights for this playlist
             recommend_helper.set_weights_user(spotify_session, results.copy())
-            # get recommendations for songs in this playlist
             
             print("%s successfully added.\n" % playlist["name"])
             
             add_more = input("Would you like to add another playlist? Y/N\n> ").lower() in SET_YES
             print()
-            
+        
+        # Include all recommended songs into Spotify's recommended results
         list_spotify_recommends.extend(recommend_helper.
                                        get_spotify_recommendations(spotify_session, 
                                                                    results.copy()))
+        
+        # set recommended song weights for songs in the list of recommendations
         recommend_helper.set_weights_recommended(spotify_session, 
                                                  list_spotify_recommends)
         
-        
+        # get Spot my New Song's recommendations based on weights inserted previously
         recommendations = recommend_helper.get_recommendations(spotify_session, 30)
         
         print("I recommend the following:")

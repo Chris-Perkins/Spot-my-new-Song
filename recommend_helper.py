@@ -42,7 +42,8 @@ def get_list_songs(spotify_session, dict_songs):
     return list_songs
 
 
-# get recommendations from spotify for a list of songs.
+# in: a valid spotify session, a dictionary of songs
+# out: a list of Spotify's recommendations for songs
 def get_spotify_recommendations(spotify_session, dict_songs):
     print("Fetching songs...")
     
@@ -75,14 +76,16 @@ def get_spotify_recommendations(spotify_session, dict_songs):
     return list_spotify_recommends
     
 
-# get recommendations based on occurrence values
+# in: a valid spotify session, limit for amount of songs to return
+# out: a list of "limit" length of recommendations for the user
 def get_recommendations(spotify_session, limit):
     print("Fetching recommendations...")
-    
     list_recommendations = list()
     recommendation_count = 0
+    
     for song in LIST_RECOMMENDATION_SONGS:
         recommendation_count += 1
+        # print every 1000th interval to notify the user that we're still processing
         if (recommendation_count % 1000 == 0):
             print("Parsing recommendation #%d" % recommendation_count)
         
@@ -94,11 +97,14 @@ def get_recommendations(spotify_session, limit):
             
         # do not use URI here; some artists release songs as singles, then as parts of albums.
         # result is duplicate recommendations. Sorted to prevent different artist ordering from affecting.
-        song["artists"].sort(key=lambda x : x["name"])
+        song["artists"].sort(key = lambda x : x["name"])
         artist_string = ", ".join(x["name"] for x in song["artists"])
         s = "%s: %s" % (artist_string, song["name"])
         total_occurrence_value += DICT_OCCURRENCES[s]
         
+        # multiply by a random number to randomize our results
+        # this allows the user to find multiple different lists of
+        # recommendations without creating new playlists every time.
         total_occurrence_value = total_occurrence_value * random.random()
         
         # if this song is not already in our playlist
@@ -107,13 +113,16 @@ def get_recommendations(spotify_session, limit):
             
     print("Finished parsing %d recommendations!\n" % recommendation_count)
     
-    list_recommendations.sort(key=lambda x: x[0], reverse=True)
+    # sort by the first value in recommendations (the weight of the song's recommendation)
+    list_recommendations.sort(key = lambda x: x[0], reverse=True)
     
     list_output = list()
+    # append as many songs as we can up to limit or the amount of songs
     for index in range(min(limit, len(list_recommendations))):
+        # index 1 indicates the song (index 0 is the weight)
         list_output.append(list_recommendations[index][1])
     
-    # reset everything
+    # reset everything for user later
     LIST_RECOMMENDATION_SONGS.clear()
     DICT_OCCURRENCES.clear()
     SET_RECOMMENDATION_URIS.clear()
@@ -138,7 +147,10 @@ def set_weights_user(spotify_session, dict_songs):
         dict_songs["tracks"] = spotify_session.next(dict_songs["tracks"])
         
 
-
+# in: a valid spotify session, a list of spotify's recommended songs
+# out: nothing
+# sets the weights for all recommendations so we can parse do some
+# math shenanigans later.
 def set_weights_recommended(spotify_session, list_spotify_recommends):
     for song in list_spotify_recommends:
         # prevent the song from being added twice to list
@@ -148,22 +160,26 @@ def set_weights_recommended(spotify_session, list_spotify_recommends):
         set_weights_helper(song, False)
 
 
-# in: a song, bool of if source of this song is the user
+# in: a song, bool indicating source is the user (true) or spotify (false)
 # out: none
-# helper function for set_weights. Sets weights of songs received
+# helper function for set_weights. Sets weights of songs received in DICT_OCCURRENCES
 def set_weights_helper(song, source_is_user):
+    # Set weights for artists, albums, and the song URI itself.
+    # artist weight
     for artist in song["artists"]:
         if artist["uri"] not in DICT_OCCURRENCES:
             DICT_OCCURRENCES[artist["uri"]] = 0
         DICT_OCCURRENCES[artist["uri"]] += DICT_OCCURRENCE_VALUES["ARTIST"][source_is_user]
     
+    # album weight
     if song["album"]["uri"] not in DICT_OCCURRENCES:
         DICT_OCCURRENCES[song["album"]["uri"]] = 0
     DICT_OCCURRENCES[song["album"]["uri"]] += DICT_OCCURRENCE_VALUES["ALBUM"][source_is_user]
     
-    # do not use URI here; some artists release songs as singles, then as parts of albums.
+    # song weight
+    # do not use song URI here; some artists release songs as singles, then as parts of albums.
     # result is duplicate recommendations. Sorted to prevent different artist ordering from affecting.
-    song["artists"].sort(key=lambda x : x["name"])
+    song["artists"].sort(key = lambda x : x["name"])
     artist_string = ", ".join(x["name"] for x in song["artists"])
     s = "%s: %s" % (artist_string, song["name"])
         
